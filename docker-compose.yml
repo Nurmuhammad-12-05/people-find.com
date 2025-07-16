@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  nest-app:
+    build:
+      context: .
+    command: ['sh', '-c', 'npx prisma db push && yarn start:prod']
+    environment:
+      - DATABASE_URL=${DATABASE_DOCKER_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - JWT_KEY=${JWT_KEY}
+      - SUPERADMIN_USERNAME=${SUPERADMIN_EMAIL}
+      - SUPERADMIN_PASSWORD=${SUPERADMIN_PASSWORD}
+      - SUPERADMIN_PHONE_NUMBER=${SUPERADMIN_NAME}
+    env_file:
+      - .env
+    ports:
+      - '8080:4000'
+    depends_on:
+      - postgres
+      - redis
+
+  # nginx:
+  #   container_name: nginx-container
+  #   image: nginx:latest
+  #   ports:
+  #     - '80:80'
+  #     - '443:443'
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/ssl
+
+  postgres:
+    image: postgres:17.5
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_DB}
+    env_file:
+      - .env
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5433:5432'
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - '6378:6379'
+
+volumes:
+  my_volumes:
+  redis_volumes:

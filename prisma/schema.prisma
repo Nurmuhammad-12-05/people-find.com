@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User{
+  id              String @id @default(uuid())
+  email           String @unique
+  password        String?
+  name            String
+  role            UserRole @default(USER)
+  avatar          String?
+  bio             String?
+  location        String?
+  skills          String[]
+  isVerified      Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  accounts        OAuthAccount[]
+  searches        Search[]
+  saved           SavedProfile[]
+  chats           InteractionLog[]
+  contactRequests ContactRequest[]
+
+  @@map("users")
+}
+
+
+model OAuthAccount{
+  id String @id @default(uuid())
+  user_id String
+  provider String
+  provider_id String
+  User User @relation(fields: [user_id],references: [id],onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider,provider_id])
+  
+  @@map("oauth_accounts")
+}
+
+
+model Search {
+  id            String @id @default(uuid())
+  userId        String
+  originalQuery String
+  parsedQuery   Json
+  filters       Json
+  resultsCount  Int
+  status        SearchStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+
+  user          User @relation(fields: [userId],references: [id])
+
+  results       SearchResult[]
+
+  @@map("searchs")
+}
+
+
+model SearchResult {
+  id         String @id @default(uuid())
+  searchId   String
+  externalId String
+  platform   Platform
+  name       String
+  title      String?
+  location   String?
+  avatar     String?
+  skills     String[]
+  profileUrl String
+  matchScore Float @default(0)
+  rawData    Json
+
+  search     Search @relation(fields: [searchId],references: [id])
+
+  @@map("search_results") 
+}
+
+
+model SavedProfile {
+  id        String @id @default(cuid())
+  userId    String
+  profileId String
+  notes     String?
+  tags      String[]
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id])
+
+  @@map("saved_profiles")
+}
+
+
+
+model InteractionLog {
+  id        String   @id @default(cuid())
+  userId    String
+  role      LogRole
+  message   String
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id])
+
+  @@map("interaction_log")
+}
+
+
+model ContactRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  profileId String
+  message   String?
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id])
+
+  @@map("contact_requests")
+}
+
+
+model ErrorLog {
+  id         String   @id @default(cuid())
+  message    String
+  stackTrace String?
+  context    Json?
+  createdAt  DateTime @default(now())
+
+  @@map("error_logs")
+}
+
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+enum Platform {
+  LINKEDIN
+  GITHUB
+  GOOGLE
+}
+
+enum SearchStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum LogRole {
+  USER
+  AI
+}
+
+enum RequestStatus {
+  PENDING
+  SENT
+  FAILED
+}
