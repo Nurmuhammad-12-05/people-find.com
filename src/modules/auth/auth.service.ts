@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RedisClientType } from 'redis';
+import { CacheService } from 'src/common/cache/cache.service';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
     private readonly db: DatabaseService,
     private readonly jwtService: JwtService,
     @Inject('REDIS_CLIENT') private redis: RedisClientType,
+    private readonly cacheService: CacheService,
   ) {}
 
   async googleCallback(user: any) {
@@ -252,27 +254,32 @@ export class AuthService {
   }
 
   async profile(userId: string) {
+    const cacheKey = `auth:me:${userId}`;
+    const cached = await this.cacheService.get<any>(cacheKey);
+    if (cached) return cached;
+
     const user = await this.db.prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatar: true,
-        bio: true,
-        location: true,
-        skills: true,
-      },
+      include: { userFile: true },
     });
 
     if (!user) throw new ConflictException('Reference not found.');
 
-    return user;
+    await this.cacheService.set(cacheKey, user, 60);
+
+    const data = {
+      ...user,
+      password: '',
+    };
+
+    return data;
   }
 
-  async logout(token: string, expiresInSeconds: number) {
+  async logout(token: string, expiresInSeconds: number, userId: string) {
     await this.redis.set(`bl:${token}`, '1', {
       EX: expiresInSeconds,
     });
+
+    await this.cacheService.del(`auth:me:${userId}`);
   }
 }

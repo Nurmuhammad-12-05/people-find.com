@@ -36,6 +36,7 @@ export class AuthGuard implements CanActivate {
       request.userId = userId;
 
       request.role = role;
+
       return true;
     } catch (error) {
       throw new BadRequestException('Token invalide.');

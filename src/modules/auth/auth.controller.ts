@@ -110,7 +110,8 @@ export class AuthController {
   logout(@Req() req: Request) {
     const token = req.headers.authorization!.split(' ')[1];
     const expiresIn = 3600;
-    this.authService.logout(token, expiresIn);
+    const userId = req['userId'];
+    this.authService.logout(token, expiresIn, userId);
     return { message: 'Logged out successfully' };
   }
 }

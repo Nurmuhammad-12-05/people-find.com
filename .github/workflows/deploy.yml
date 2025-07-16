@@ -1,0 +1,29 @@
+name: to Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          printf "%s\n" "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+
+          ssh -i key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+            REPO_DIR=/home/ubuntu/app
+            if [ ! -d "$REPO_DIR/.git" ]; then
+              git clone https://github.com/Nurmuhammad-12-05/people-find.com.git "$REPO_DIR"
+            fi
+            cd "$REPO_DIR"
+            git pull origin main
+            sudo docker compose down
+            sudo docker compose -f docker-compose.prod.yml up --build -d
+          EOF

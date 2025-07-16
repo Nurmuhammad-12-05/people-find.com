@@ -3,11 +3,15 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { RedisModule } from './redis/redis.module';
+import { CacheModule } from 'src/common/cache/cache.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     DatabaseModule,
+    StorageModule,
     RedisModule,
+    CacheModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -25,5 +29,6 @@ import { RedisModule } from './redis/redis.module';
     }),
   ],
   providers: [],
+  exports: [DatabaseModule, RedisModule, CacheModule],
 })
 export class CoreModule {}

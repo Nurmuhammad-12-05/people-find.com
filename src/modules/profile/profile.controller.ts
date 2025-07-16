@@ -11,11 +11,6 @@ import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { diskStorage } from 'multer';
-import {
-  editFileName,
-  imageFileFilter,
-} from 'src/common/utils/file-upload.utils';
 
 import {
   ApiTags,
@@ -24,6 +19,7 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
 
 @ApiTags('Profile')
@@ -34,8 +30,8 @@ export class ProfileController {
 
   @Put('me')
   @ApiOperation({ summary: 'Foydalanuvchi profilini yangilash' })
-  @ApiResponse({ status: 200, description: 'Profil muvaffaqiyatli yangilandi' })
   @ApiBody({ type: UpdateProfileDto })
+  @ApiResponse({ status: 200, description: 'Profil muvaffaqiyatli yangilandi' })
   async updateProfile(@Req() req: Request, @Body() dto: UpdateProfileDto) {
     const userId = req['userId'];
     return this.profileService.updateProfile(userId, dto);
@@ -44,22 +40,25 @@ export class ProfileController {
   @Put('me/avatar')
   @ApiOperation({ summary: 'Profil avatarini yangilash' })
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 200, description: 'Avatar muvaffaqiyatli yuklandi' })
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads/avatars',
-        filename: editFileName,
-      }),
-      fileFilter: imageFileFilter,
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   async updateAvatar(
     @UploadedFile() file: Express.Multer.File,
     @Req() req: Request,
   ) {
     const userId = req['userId'];
-    return this.profileService.updateAvatar(userId, file?.filename);
+    return this.profileService.updateAvatar(userId, file);
   }
 
   @Delete('me/avatar')
@@ -68,5 +67,16 @@ export class ProfileController {
   async deleteAvatar(@Req() req: Request) {
     const userId = req['userId'];
     return this.profileService.deleteAvatar(userId);
+  }
+
+  @Delete('delete/user')
+  @ApiOperation({ summary: 'Foydalanuvchini o‘chirish' })
+  @ApiResponse({
+    status: 200,
+    description: 'Foydalanuvchi muvaffaqiyatli o‘chirildi',
+  })
+  async deleteUser(@Req() req: Request) {
+    const userId = req['userId'];
+    return this.profileService.deleteUser(userId);
   }
 }

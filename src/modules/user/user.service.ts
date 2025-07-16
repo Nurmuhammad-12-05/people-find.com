@@ -6,35 +6,31 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from 'src/core/database/database.service';
 import { SaveProfileDto } from './dto/save.dto';
+import { CacheService } from 'src/common/cache/cache.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   async getProfileUser(id: string) {
+    const cacheKey = `profile:${id}`;
+    const cached = await this.cacheService.get<any>(cacheKey);
+    if (cached) return cached;
+
     const findUser = await this.db.prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        location: true,
-        avatar: true,
-        role: true,
-        bio: true,
-        isVerified: true,
-        skills: true,
-        accounts: {
-          select: { id: true, provider: true, provider_id: true },
-        },
-      },
+      where: { id },
+      include: { accounts: true, userFile: true },
     });
 
     if (!findUser) throw new ConflictException('Reference not found');
 
-    return { findUser };
+    const response = { user: findUser };
+    await this.cacheService.set(cacheKey, response, 300);
+
+    return response;
   }
 
   async addContactUser(message: string, profileId: string, FromUserId: string) {
@@ -112,6 +108,8 @@ export class UserService {
       },
     });
 
+    await this.cacheService.del(`saved_profiles:${userId}`);
+
     return {
       success: true,
       message: 'Profile saved successfully',
@@ -120,6 +118,10 @@ export class UserService {
   }
 
   async getAllSavedProfiles(userId: string) {
+    const cacheKey = `saved_profiles:${userId}`;
+    const cached = await this.cacheService.get<any>(cacheKey);
+    if (cached) return cached;
+
     const savedProfiles = await this.db.prisma.savedProfile.findMany({
       where: { userId },
       include: {
@@ -137,12 +139,16 @@ export class UserService {
       },
     });
 
-    return {
+    const response = {
       success: true,
       message: 'Saqlangan profillar muvaffaqiyatli olindi',
       data: savedProfiles,
       count: savedProfiles.length,
     };
+
+    await this.cacheService.set(cacheKey, response, 120); // 2 daqiqa
+
+    return response;
   }
 
   async searchSavedProfiles(userId: string, searchQuery: string) {
@@ -234,6 +240,8 @@ export class UserService {
         id: saved.id,
       },
     });
+
+    await this.cacheService.del(`saved_profiles:${userId}`);
 
     return {
       success: true,
