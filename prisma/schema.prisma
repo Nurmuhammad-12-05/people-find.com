@@ -81,6 +81,8 @@ model SearchResult {
 
   search     Search @relation(fields: [searchId],references: [id])
 
+  saveProfile SavedProfile[]
+
   @@map("search_results") 
 }
 
@@ -92,7 +94,9 @@ model SavedProfile {
   notes     String?
   tags      String[]
   createdAt DateTime @default(now())
+
   user      User @relation(fields: [userId], references: [id])
+   profile    SearchResult  @relation(fields: [profileId], references: [id]) 
 
   @@map("saved_profiles")
 }
@@ -105,6 +109,7 @@ model InteractionLog {
   role      LogRole
   message   String
   createdAt DateTime @default(now())
+
   user      User @relation(fields: [userId], references: [id])
 
   @@map("interaction_log")
@@ -118,6 +123,7 @@ model ContactRequest {
   message   String?
   status    RequestStatus @default(PENDING)
   createdAt DateTime @default(now())
+
   user      User @relation(fields: [userId], references: [id])
 
   @@map("contact_requests")

@@ -8,8 +8,8 @@ export class RedisRateLimitService {
 
   constructor(private readonly configService: ConfigService) {
     this.redis = new Redis({
-      host: configService.get('REDIS_HOST'),
-      port: configService.get('REDIS_PORT'),
+      host: configService.get<string>('REDIS_HOST'),
+      port: configService.get<number>('REDIS_PORT'),
     });
   }
 

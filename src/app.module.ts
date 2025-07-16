@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthGuard } from './common/guard/auth.guard';
 import { BlacklistGuard } from './common/guard/blacklist.guard';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { BlacklistGuard } from './common/guard/blacklist.guard';
     UserModule,
     ChatModule,
     AiModule,
+    ProfileModule,
     // ThrottlerModule.forRoot({
     //   throttlers: [
     //     {

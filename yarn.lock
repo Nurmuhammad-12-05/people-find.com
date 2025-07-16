@@ -1571,6 +1571,13 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
+"@types/multer@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/multer/-/multer-2.0.0.tgz#db5f82136b619f5ce4d923b00034eb466c13acf4"
+  integrity sha512-C3Z9v9Evij2yST3RSBktxP9STm6OdMc5uR1xF1SGr98uv8dUlAL2hqwrZ3GVB3uyMyiegnscEK6PGtYvNrjTjw==
+  dependencies:
+    "@types/express" "*"
+
 "@types/node@*":
   version "24.0.13"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.13.tgz#93ed8c05c7b188a59760be0ce2ee3fa7ad0f83f6"
@@ -2415,6 +2422,15 @@ bytes@3.1.2, bytes@^3.1.2:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
 
+cache-manager-ioredis-yet@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/cache-manager-ioredis-yet/-/cache-manager-ioredis-yet-2.1.2.tgz#336d1edd874703b48daa894bb3e46cc64d4194d2"
+  integrity sha512-p/5D+ADvJaZjAs12fR5l0ZJ+rK2EqbCryFdrzsMj3K+lGwNoCjB33N6V397otgreB+iwK+lssBshpkJDodiyMQ==
+  dependencies:
+    cache-manager "*"
+    ioredis "^5.4.1"
+    telejson "^7.2.0"
+
 cache-manager-ioredis@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cache-manager-ioredis/-/cache-manager-ioredis-2.1.0.tgz#69c9ab4cf72531f9015adf44d3822f9e2dcadc01"
@@ -2422,7 +2438,7 @@ cache-manager-ioredis@^2.1.0:
   dependencies:
     ioredis "^4.14.1"
 
-cache-manager@^7.0.1:
+cache-manager@*, cache-manager@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-7.0.1.tgz#018934791251638efe13b1ab1e2b2c0c9d49d0ca"
   integrity sha512-Hd7FOyTtwhwLgkKeKQWEw6Ixj63VKuUWYwkGgL6g6Q7eISW6uxci5+DtUXlqI0gtbLCPPdhL1+HP9Zht27DbrA==
@@ -3751,7 +3767,7 @@ ioredis@^4.14.1:
     redis-parser "^3.0.0"
     standard-as-callback "^2.1.0"
 
-ioredis@^5.6.1:
+ioredis@^5.4.1, ioredis@^5.6.1:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-5.6.1.tgz#1ed7dc9131081e77342503425afceaf7357ae599"
   integrity sha512-UxC0Yv1Y4WRJiGQxQkP0hfdL0/5/6YvdfOOClRgJ0qppSarkhneSa6UvkMkms0AkdGimSH3Ikqm+6mkMmX7vGA==
@@ -4581,6 +4597,11 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
+map-or-similar@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/map-or-similar/-/map-or-similar-1.5.0.tgz#6de2653174adfb5d9edc33c69d3e92a1b76faf08"
+  integrity sha512-0aF7ZmVon1igznGI4VS30yugpduQW3y3GkcgGJOp7d8x8QrizhigUxjI/m2UojsXXto+jLAH3KSz+xOJTiORjg==
+
 math-intrinsics@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
@@ -4602,6 +4623,13 @@ memfs@^3.4.1:
   integrity sha512-EGowvkkgbMcIChjMTMkESFDbZeSh8xZ7kNSF0hAiAN4Jh6jgHCRS0Ga/+C8y6Au+oqpezRHCfPsmJ2+DwAgiwQ==
   dependencies:
     fs-monkey "^1.0.4"
+
+memoizerific@^1.11.3:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/memoizerific/-/memoizerific-1.11.3.tgz#7c87a4646444c32d75438570905f2dbd1b1a805a"
+  integrity sha512-/EuHYwAPdLtXwAwSZkh/Gutery6pD2KYd44oQLhAvQp/50mpyduZh8Q7PYHXTCJ+wuXxt7oij2LXyIJOOYFPog==
+  dependencies:
+    map-or-similar "^1.5.0"
 
 merge-descriptors@^2.0.0:
   version "2.0.0"
@@ -4725,7 +4753,7 @@ ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-multer@2.0.1:
+multer@2.0.1, multer@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/multer/-/multer-2.0.1.tgz#3ed335ed2b96240e3df9e23780c91cfcf5d29202"
   integrity sha512-Ug8bXeTIUlxurg8xLTEskKShvcKDZALo1THEX5E41pYCD2sCVub5/kIRIGqWNoqV6szyLyQKV6mD4QUrWE5GCQ==
@@ -5775,6 +5803,13 @@ tar-stream@^3.1.7:
     b4a "^1.6.4"
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
+
+telejson@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/telejson/-/telejson-7.2.0.tgz#3994f6c9a8f8d7f2dba9be2c7c5bbb447e876f32"
+  integrity sha512-1QTEcJkJEhc8OnStBx/ILRu5J2p0GjvWsBx56bmZRqnrkdBMUe+nX92jxV+p3dB4CP6PZCdJMQJwCggkNBMzkQ==
+  dependencies:
+    memoizerific "^1.11.3"
 
 terser-webpack-plugin@^5.3.11:
   version "5.3.14"
