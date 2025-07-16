@@ -1,4 +1,4 @@
-name: To Server
+name: to Server
 
 on:
   push:
