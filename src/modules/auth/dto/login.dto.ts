@@ -16,6 +16,5 @@ export class LoginDto {
       'Kuchli parol: kamida 1 katta harf, 1 kichik harf, 1 raqam va 1 belgi bo‘lishi kerak',
   })
   @IsString()
-  @IsStrongPassword()
   password: string;
 }
