@@ -63,20 +63,21 @@ export class AuthController {
     return await this.authService.githubOAuthCallback(user);
   }
 
-  @Get('linkedin')
-  @SetMetadata('isPublic', true)
-  @UseGuards(AuthGuard('linkedin'))
-  async linkedinAuth() {}
+  // @Get('linkedin')
+  // @SetMetadata('isPublic', true)
+  // @UseGuards(AuthGuard('linkedin'))
+  // async linkedinAuth() {}
 
-  @Get('linkedin/callback')
-  @SetMetadata('isPublic', true)
-  @UseGuards(AuthGuard('linkedin'))
-  async linkedinCallback(@Req() req: Request) {
-    return {
-      message: 'Login success',
-      user: req.user,
-    };
-  }
+  // @Get('linkedin/callback')
+  // @SetMetadata('isPublic', true)
+  // @UseGuards(AuthGuard('linkedin'))
+  // async linkedinCallback(@Req() req: Request) {
+  //   return {
+  //     message: 'Login success',
+  //     user: req.user,
+  //   };
+  // }
+
   @Post('register')
   @SetMetadata('isPublic', true)
   @ApiOperation({ summary: 'Foydalanuvchini ro‘yxatdan o‘tkazish' })
