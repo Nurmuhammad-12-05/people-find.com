@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DatabaseService } from './core/database/database.service';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import passport from 'passport';
 
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -15,6 +16,8 @@ async function bootstrap() {
     app.useGlobalPipes(
       new ValidationPipe({ whitelist: true, transform: true }),
     );
+
+    app.use(passport.initialize());
 
     const dbService = app.get(DatabaseService);
 
