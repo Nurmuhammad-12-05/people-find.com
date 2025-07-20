@@ -27,7 +27,13 @@ export class UserService {
 
     if (!findUser) throw new ConflictException('Reference not found');
 
-    const response = { user: findUser };
+    const data = {
+      ...findUser,
+      password: '',
+    };
+
+    const response = { user: data };
+
     await this.cacheService.set(cacheKey, response, 300);
 
     return response;
@@ -119,7 +125,9 @@ export class UserService {
 
   async getAllSavedProfiles(userId: string) {
     const cacheKey = `saved_profiles:${userId}`;
+
     const cached = await this.cacheService.get<any>(cacheKey);
+
     if (cached) return cached;
 
     const savedProfiles = await this.db.prisma.savedProfile.findMany({
@@ -139,14 +147,19 @@ export class UserService {
       },
     });
 
+    const data = {
+      ...savedProfiles,
+      password: '',
+    };
+
     const response = {
       success: true,
       message: 'Saqlangan profillar muvaffaqiyatli olindi',
-      data: savedProfiles,
+      data: data,
       count: savedProfiles.length,
     };
 
-    await this.cacheService.set(cacheKey, response, 120); // 2 daqiqa
+    await this.cacheService.set(cacheKey, response, 120);
 
     return response;
   }

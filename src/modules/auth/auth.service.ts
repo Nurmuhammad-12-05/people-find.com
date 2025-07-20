@@ -255,7 +255,9 @@ export class AuthService {
 
   async profile(userId: string) {
     const cacheKey = `auth:me:${userId}`;
+
     const cached = await this.cacheService.get<any>(cacheKey);
+
     if (cached) return cached;
 
     const user = await this.db.prisma.user.findUnique({
@@ -265,12 +267,14 @@ export class AuthService {
 
     if (!user) throw new ConflictException('Reference not found.');
 
-    await this.cacheService.set(cacheKey, user, 60);
-
     const data = {
       ...user,
       password: '',
     };
+
+    await this.cacheService.set(cacheKey, data, 60);
+
+    console.log(data);
 
     return data;
   }

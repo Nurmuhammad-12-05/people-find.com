@@ -23,8 +23,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
             compute(userFiles) {
               if (!userFiles.avatar_key) return null;
 
-              console.log(userFiles.avatar_key);
-
               const url = process.env.AWS_CLOUDFRONT_URL;
 
               const imageUrl = `${url}/${userFiles.avatar_key}`;

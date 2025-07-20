@@ -1,4 +1,3 @@
-// src/common/cache/cache.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { RedisClientType } from 'redis';
 

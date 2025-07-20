@@ -68,7 +68,6 @@ export class S3Service extends S3Client {
   async deleteFile(fileName: string) {
     const deleteCommand = this.deleteCommand(fileName);
     const status = await this.send(deleteCommand);
-    console.log(status);
   }
 
   sendFileCommand(file: Express.Multer.File, fileName: string) {
