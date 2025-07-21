@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/core/database/database.service';
-// import fs from 'fs';
-// import path from 'path';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { S3Service } from 'src/core/storage/s3/s3.service';
 
@@ -38,8 +36,8 @@ export class ProfileService {
   async updateAvatar(userId: string, file: Express.Multer.File) {
     const { fileName, url } = await this.s3Service.uploadFile(file, 'avatars');
 
-    const findUser = await this.db.prisma.user.findUnique({
-      where: { id: userId },
+    const findUser = await this.db.prisma.userFile.findUnique({
+      where: { userId: userId },
     });
 
     if (findUser) {
