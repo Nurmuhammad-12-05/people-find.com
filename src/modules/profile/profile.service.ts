@@ -34,6 +34,36 @@ export class ProfileService {
   async updateAvatar(userId: string, file: Express.Multer.File) {
     const { fileName, url } = await this.s3Service.uploadFile(file, 'avatars');
 
+    const findUser = await this.db.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (findUser) {
+      await this.db.prisma.userFile.update({
+        where: { userId: userId },
+        data: {
+          avatar_key: fileName,
+          userId: userId,
+        },
+      });
+
+      const user = await this.db.prisma.user.findUnique({
+        where: { id: userId },
+        include: { userFile: true },
+      });
+
+      const data = {
+        ...user,
+        password: '',
+      };
+
+      return {
+        success: true,
+        message: 'Avatar yangilandi',
+        data: data,
+      };
+    }
+
     await this.db.prisma.userFile.create({
       data: {
         avatar_key: fileName,
