@@ -15,7 +15,11 @@ export class ProfileService {
   async updateProfile(userId: string, dto: UpdateProfileDto) {
     const updated = await this.db.prisma.user.update({
       where: { id: userId },
-      data: dto,
+      data: {
+        ...dto,
+        isVerified: true,
+      },
+
       include: { accounts: true, userFile: true },
     });
 
