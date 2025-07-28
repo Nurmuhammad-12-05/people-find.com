@@ -20,7 +20,7 @@ jobs:
           ssh -i key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
             REPO_DIR=/home/ubuntu/app
             if [ ! -d "$REPO_DIR/.git" ]; then
-              git clone https://github.com/Nurmuhammad-12-05/people-find.com.git "$REPO_DIR"
+              git clone https://github.com/NurmuhammadAshuraliyev/people-find.com.git "$REPO_DIR"
             fi
             cd "$REPO_DIR"
             git pull origin main
