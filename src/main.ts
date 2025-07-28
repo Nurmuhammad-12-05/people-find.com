@@ -8,41 +8,36 @@ import passport from 'passport';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  try {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    app.setGlobalPrefix('/api');
+  app.setGlobalPrefix('/api');
 
-    app.useGlobalPipes(
-      new ValidationPipe({ whitelist: true, transform: true }),
-    );
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-    app.use(passport.initialize());
+  app.use(passport.initialize());
 
-    const dbService = app.get(DatabaseService);
+  const dbService = app.get(DatabaseService);
 
-    app.useGlobalFilters(new GlobalExceptionFilter(dbService));
+  app.useGlobalFilters(new GlobalExceptionFilter(dbService));
 
-    const config = new DocumentBuilder()
-      .setTitle('API hujjatlari')
-      .setDescription('Sizning NestJS loyihangiz uchun Swagger hujjatlari')
-      .setVersion('1.0')
-      .addBearerAuth()
-      .build();
+  const config = new DocumentBuilder()
+    .setTitle('API hujjatlari')
+    .setDescription('Sizning NestJS loyihangiz uchun Swagger hujjatlari')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('/api/docs', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/api/docs', app, document);
 
-    app.enableCors({
-      origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      credentials: true,
-      allowedHeaders: '*',
-    });
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders: '*',
+  });
 
-    await app.listen(process.env.PORT ?? 3000);
-  } catch (error) {
-    console.error(error.message);
-  }
+  await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap();
