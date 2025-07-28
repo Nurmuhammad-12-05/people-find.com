@@ -42,17 +42,14 @@ export class AuthController {
   @ApiOperation({ summary: 'Google OAuth callback' })
   @ApiResponse({ status: 200, description: 'Google token qaytardi' })
   @UseGuards(AuthGuard('google'))
-  async googleCallback(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async googleCallback(@Req() req: Request, @Res() res: Response) {
     const user = req['user'];
     const { access_token, refresh_token, users } =
       await this.authService.googleCallback(user);
 
     res.redirect(`http://localhost:5173/?token=${access_token}`);
 
-    return { access_token, refresh_token, users };
+    // return { access_token, refresh_token, users };
   }
 
   @Get('github')
@@ -67,17 +64,14 @@ export class AuthController {
   @ApiOperation({ summary: 'GitHub OAuth callback' })
   @ApiResponse({ status: 200, description: 'GitHub token qaytardi' })
   @UseGuards(AuthGuard('github'))
-  async githubOAuthCallback(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async githubOAuthCallback(@Req() req: Request, @Res() res: Response) {
     const user = req['user'];
     const { access_token, refresh_token, users } =
       await this.authService.githubOAuthCallback(user);
 
     res.redirect(`http://localhost:5173/?token=${access_token}`);
 
-    return { access_token, refresh_token, users };
+    // return { access_token, refresh_token, users };
   }
 
   // @Get('linkedin')
